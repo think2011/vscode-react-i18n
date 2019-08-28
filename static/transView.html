@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
+  <style>
+    [v-cloak] {
+      display: none;
+    }
+
+    html {
+      box-sizing: border-box;
+    }
+    *,
+    *:before,
+    *:after {
+      box-sizing: inherit;
+    }
+
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      color: #a7b9d1;
+      background: linear-gradient(to right, #282c35, #282c35);
+    }
+
+    ul,
+    li {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .main-container {
+      padding: 20px;
+    }
+
+    .main-container .header {
+      margin-bottom: 20px;
+    }
+    .main-container .header h2 {
+      margin: 0;
+      padding: 0 0 15px 0;
+      border-bottom: 1px solid #4e5b71;
+      display: flex;
+    }
+
+    .main-container .header h2:hover button {
+      opacity: 1;
+    }
+    .main-container .header h2 button {
+      margin-left: auto;
+      opacity: 0.3;
+    }
+
+    .i18n-table .item {
+      margin-bottom: 15px;
+      padding: 12px 15px;
+      border-radius: 5px;
+      background: #1f2329;
+    }
+
+    .i18n-table .item input:hover {
+      border-bottom-color: #4e5b71;
+    }
+
+    .i18n-table .item:hover button {
+      opacity: 1;
+    }
+
+    .i18n-table .item input {
+      border-bottom-color: transparent;
+    }
+
+    .i18n-table .item input:focus {
+      border-bottom-color: #2e7cf1;
+    }
+
+    .i18n-table .item > h4 {
+      margin: 0 0 5px 0;
+      display: flex;
+      align-items: center;
+    }
+
+    .i18n-table .item > h4 span {
+      padding: 0 0 3px 0;
+      color: #79a4de;
+    }
+
+    .i18n-table .item > h4 button {
+      margin-left: auto;
+      opacity: 0.3;
+    }
+
+    .i18n-table .item > h4 button[disabled] {
+      opacity: 1;
+      color: #ccc;
+      background: #555;
+      cursor: progress;
+    }
+
+    .i18n-table .item > ul {
+      display: flex;
+      flex-flow: column wrap;
+    }
+
+    .i18n-table .item > ul > li {
+      display: flex;
+      align-items: center;
+      font-size: 12px;
+      margin-bottom: 3px;
+    }
+
+    .i18n-table .item > ul > li span {
+      width: 50px;
+    }
+
+    .i18n-table .item .lng.active {
+      color: #c7c7c7;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      color: #a7b9d1;
+      border: none;
+      border-bottom: 1px solid #273750;
+      padding: 5px 8px;
+      background: transparent;
+      transition: 0.3s;
+      font-size: 14px;
+    }
+
+    input:focus {
+      outline: none;
+    }
+
+    button {
+      background: #2e7cf1;
+      border: none;
+      color: #f6f9ff;
+      padding: 5px 8px;
+      border-radius: 3px;
+      transition: 0.3s;
+      cursor: pointer;
+    }
+  </style>
+  <body>
+    <div id="app" v-cloak class="main-container">
+      <div class="header">
+        <h2>
+          <span>🔖 {{ shortFileName }}</span>
+          <button @click="batchTrans()">
+            {{working ? '翻译中' : `批量根据${sourceLocale}翻译` }}
+          </button>
+        </h2>
+        <small>当前文件共有{{ keyTotal }}条文案</small>
+      </div>
+
+      <ul class="i18n-table">
+        <li v-for="(transItem, key, index) in allTrans" :key="key" class="item">
+          <h4>
+            <span>{{ `#${index+1} ${key}` }}</span>
+            <button @click="trans(key, transItem)" :disabled="loadingMap[key]">
+              {{loadingMap[key] ? `翻译中..` : `根据${sourceLocale}翻译`}}
+            </button>
+          </h4>
+
+          <ul>
+            <li v-for="i18nItem in transItem" :key="transItem.lng">
+              <span
+                class="lng"
+                :class="{active: i18nItem.lng === sourceLocale}"
+                >{{ i18nItem.lng }}</span
+              >
+              <input
+                @blur="writeFile(i18nItem)"
+                type="text"
+                v-model="i18nItem.text"
+                placeholder="-"
+              />
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.min.js"></script>
+    <script>
+      const vscode = acquireVsCodeApi()
+
+      const EVENT_TYPE = {
+        READY: 0,
+        ALL_TRANS: 1,
+        TRANS: 2,
+        WRITE_FILE: 3
+      }
+
+      window.app = new Vue({
+        el: '#app',
+        data() {
+          return {
+            shortFileName: '',
+            allTrans: {},
+            loadingMap: {},
+            transTasks: [],
+            emitTransTimer: null,
+            sourceLocale: 'zh-CN'
+          }
+        },
+        computed: {
+          keyTotal() {
+            return Object.keys(this.allTrans).length
+          },
+          working() {
+            return Object.values(this.loadingMap).find(Boolean)
+          }
+        },
+        created() {
+          window.addEventListener('message', ({ data: eventData }) => {
+            const { data, type } = eventData
+            switch (type) {
+              case EVENT_TYPE.ALL_TRANS:
+                this.shortFileName = data.shortFileName
+                this.sourceLocale = data.sourceLocale
+                this.allTrans = data.allTrans
+                break
+
+              case EVENT_TYPE.TRANS:
+                const { key, trans } = data
+                this.$set(this.allTrans, key, trans)
+                this.$delete(this.loadingMap, key)
+                break
+
+              default:
+              //
+            }
+          })
+
+          vscode.postMessage({ type: EVENT_TYPE.READY })
+        },
+        methods: {
+          batchTrans() {
+            Object.entries(this.allTrans).forEach(([key, transItem]) =>
+              this.trans(key, transItem)
+            )
+          },
+          trans(key, transItem) {
+            if (this.loadingMap[key]) {
+              return
+            }
+
+            this.$set(this.loadingMap, key, true)
+            vscode.postMessage({
+              type: EVENT_TYPE.TRANS,
+              data: {
+                key,
+                trans: transItem
+              }
+            })
+          },
+          writeFile(i18nItem) {
+            vscode.postMessage({
+              type: EVENT_TYPE.WRITE_FILE,
+              data: [i18nItem]
+            })
+          }
+        }
+      })
+    </script>
+  </body>
+</html>

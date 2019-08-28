@@ -1,0 +1,118 @@
+{
+  "name": "react-i18n",
+  "displayName": "react i18n",
+  "description": "🔖 这个插件能够帮到你方便浏览和编写 react i18n",
+  "version": "0.0.1",
+  "publisher": "think2011",
+  "engines": {
+    "vscode": "^1.37.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "preview": true,
+  "activationEvents": [
+    "onLanguage:react",
+    "onLanguage:javascript",
+    "onLanguage:typescript"
+  ],
+  "keywords": [
+    "react",
+    "react-i18n",
+    "react i18n",
+    "i18n"
+  ],
+  "icon": "static/logo.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/think2011/vscode-react-i18n.git"
+  },
+  "homepage": "https://github.com/think2011/vscode-react-i18n",
+  "main": "./out/extension",
+  "contributes": {
+    "commands": [
+      {
+        "command": "react-i18n.transView",
+        "title": "翻译当前文件的i18n",
+        "icon": {
+          "light": "./static/icon-translate.svg",
+          "dark": "./static/icon-translate.svg"
+        }
+      },
+      {
+        "command": "react-i18n.autoInitPath",
+        "title": "react-i18n: 自动配置路径"
+      },
+      {
+        "command": "react-i18n.manualInitPath",
+        "title": "react-i18n: 手动配置路径"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "when": "resourceLangId == react-html",
+          "command": "react-i18n.transView",
+          "group": "navigation"
+        },
+        {
+          "when": "resourceLangId == react",
+          "command": "react-i18n.transView",
+          "group": "navigation"
+        },
+        {
+          "when": "resourceLangId == javascript",
+          "command": "react-i18n.transView",
+          "group": "navigation"
+        },
+        {
+          "when": "resourceLangId == typescript",
+          "command": "react-i18n.transView",
+          "group": "navigation"
+        }
+      ]
+    },
+    "configuration": {
+      "type": "object",
+      "title": "react-i18n",
+      "properties": {
+        "react-i18n.i18nPaths": {
+          "type": "string",
+          "default": "",
+          "description": "翻译文件的目录（相对于项目根目录）"
+        },
+        "react-i18n.sourceLocale": {
+          "type": "string",
+          "default": "zh-CN",
+          "description": "主要语言"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "deploy": "vsce publish --yarn",
+    "vscode:prepublish": "yarn run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "yarn run compile",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/glob": "^7.1.1",
+    "@types/lodash": "^4.14.137",
+    "@types/mocha": "^5.2.6",
+    "@types/node": "^10.12.21",
+    "@types/vscode": "^1.37.0",
+    "glob": "^7.1.4",
+    "mocha": "^6.1.4",
+    "tslint": "^5.12.1",
+    "typescript": "^3.3.1",
+    "vsce": "^1.66.0",
+    "vscode-test": "^1.0.2"
+  },
+  "dependencies": {
+    "fast-glob": "^2.2.6",
+    "lodash": "^4.17.15",
+    "translation.js": "^0.7.5"
+  }
+}
