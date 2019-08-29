@@ -12,7 +12,7 @@ class ExtractProvider extends Extract {
     }
 
     const nsKey = this.getNSkey()
-    return nsKey ? `${nsKey}.${restKey.join('.')}` : key
+    return nsKey ? `${nsKey}.${restKey.length ? restKey.join('.') : key}` : key
   }
 
   defaultKeyTransform(defaultKey): string {

@@ -2,7 +2,7 @@
   "name": "react-i18n",
   "displayName": "react i18n",
   "description": "🔖 这个插件能够帮到你方便浏览和编写 react i18n",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "publisher": "think2011",
   "engines": {
     "vscode": "^1.37.0"
@@ -35,13 +35,42 @@
   "homepage": "https://github.com/think2011/vscode-react-i18n",
   "main": "./out/extension",
   "contributes": {
+    "menus": {
+      "editor/title": [
+        {
+          "when": "resourceLangId == react",
+          "command": "react-i18n.transView",
+          "group": "navigation"
+        },
+        {
+          "when": "resourceLangId == typescriptreact",
+          "command": "react-i18n.transView",
+          "group": "navigation"
+        },
+        {
+          "when": "resourceLangId == javascriptreact",
+          "command": "react-i18n.transView",
+          "group": "navigation"
+        },
+        {
+          "when": "resourceLangId == javascript",
+          "command": "react-i18n.transView",
+          "group": "navigation"
+        },
+        {
+          "when": "resourceLangId == typescript",
+          "command": "react-i18n.transView",
+          "group": "navigation"
+        }
+      ]
+    },
     "commands": [
       {
         "command": "react-i18n.transView",
         "title": "翻译当前文件的i18n",
         "icon": {
-          "light": "./static/icon-translate.svg",
-          "dark": "./static/icon-translate.svg"
+          "light": "./static/logo.png",
+          "dark": "./static/logo.png"
         }
       },
       {
