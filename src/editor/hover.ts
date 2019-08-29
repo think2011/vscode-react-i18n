@@ -12,6 +12,8 @@ export const hoverEditor = () => {
   return vscode.languages.registerHoverProvider(
     [
       { language: 'react', scheme: '*' },
+      { language: 'javascriptreact', scheme: '*' },
+      { language: 'typescriptreact', scheme: '*' },
       { language: 'javascript', scheme: '*' },
       { language: 'typescript', scheme: '*' }
     ],

@@ -1,9 +1,11 @@
-import './GLOBAL_META'
-
 import * as vscode from 'vscode'
 
-import Log from './core/Log'
+// 初始化全局配置
 import Config from './core/Config'
+Config.extAuthor = 'think2011'
+Config.extName = 'react-i18n'
+
+import Log from './core/Log'
 import * as coreCommandsModules from './core/commands'
 
 import { isReactProject } from './Utils'
@@ -18,7 +20,7 @@ process.on('uncaughtException', function(err) {
 })
 
 export async function activate(ctx: vscode.ExtensionContext) {
-  Log.info(`🌞 Activated, v${Config.version}`)
+  Log.info(`🌞 ${Config.extensionName} Activated, v${Config.version}`)
 
   if (!(await isReactProject())) {
     Log.info('🌑 Inactive')

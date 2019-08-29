@@ -13,6 +13,8 @@
   "preview": true,
   "activationEvents": [
     "onLanguage:react",
+    "onLanguage:typescriptreact",
+    "onLanguage:javascriptreact",
     "onLanguage:javascript",
     "onLanguage:typescript"
   ],
@@ -20,6 +22,9 @@
     "react",
     "react-i18n",
     "react i18n",
+    "i18next",
+    "next-i18next",
+    "next",
     "i18n"
   ],
   "icon": "static/logo.png",
@@ -48,37 +53,12 @@
         "title": "react-i18n: 手动配置路径"
       }
     ],
-    "menus": {
-      "editor/title": [
-        {
-          "when": "resourceLangId == react-html",
-          "command": "react-i18n.transView",
-          "group": "navigation"
-        },
-        {
-          "when": "resourceLangId == react",
-          "command": "react-i18n.transView",
-          "group": "navigation"
-        },
-        {
-          "when": "resourceLangId == javascript",
-          "command": "react-i18n.transView",
-          "group": "navigation"
-        },
-        {
-          "when": "resourceLangId == typescript",
-          "command": "react-i18n.transView",
-          "group": "navigation"
-        }
-      ]
-    },
     "configuration": {
       "type": "object",
       "title": "react-i18n",
       "properties": {
         "react-i18n.i18nPaths": {
           "type": "string",
-          "default": "",
           "description": "翻译文件的目录（相对于项目根目录）"
         },
         "react-i18n.sourceLocale": {

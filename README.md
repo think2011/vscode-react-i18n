@@ -1,5 +1,5 @@
 <p align="center">
-<img src="https://raw.githubusercontent.com/think2011/vscode-react-i18n/master/static/logo.png" alt="logo" width="100"/>
+<img src="./static/logo.png" alt="logo" width="100"/>
 </p>
 <h1 align="center">vscode-react-i18n</h1>
 
@@ -15,7 +15,7 @@
 </p>
 
 <p align="center">
-这个插件能够帮到你方便查看和编写 react-i18n 🎉
+这个插件能够帮到你方便查看和编写 <a href="https://github.com/i18next/react-i18next">i18next</a> 🎉
 </p>
 
 <h2 align="center"> ⚡ 主要功能 </h2>
@@ -66,7 +66,18 @@
 
 ![](static/demo3.png)
 
+### 3. 但是组件的语法还不支持
+
+像是这样的
+
+```js 
+<Translation ns="ns1"> // 不支持 ☹️
+  {(t) => <p>{t('my translated text')}</p>} 
+</Translation>
+```
+
 ## 📆 功能列表
+
 - [x] 翻译提示
 - [x] 翻译注释
 - [x] 翻译中心
@@ -79,6 +90,8 @@
 - [x] 重复、覆盖检测
 - [ ] 快捷跳转到对应翻译文件
 - [ ] 翻译率提示
+- [ ] 组件的语法支持
+
 
 
 ## QA
@@ -88,4 +101,4 @@
 
 > 怎么不开 Issues?
 
-因为工作忙，而且懒，如果你遇到了**实在难以解决的问题**或者非要~~提需求~~ **吐槽**，那你给我发封邮件吧 <452125301.hzplay@gmail.com>，或者直接提 PR 那就太棒了 🙂
+估计很长一段时间里都比较忙，而且懒，如果你遇到了**实在难以解决的问题**或者非要~~提需求~~ **吐槽**，那你给我发封邮件吧 <452125301.hzplay@gmail.com>，要是可以直接提 PR 那真的太棒了 🙂

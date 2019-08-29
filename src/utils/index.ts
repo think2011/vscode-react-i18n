@@ -3,7 +3,7 @@ import Log from '../core/Log'
 
 export * from './KeyDetector'
 
-export const KEY_REG = /(?:^t|\st|{t|i18n\.t)\(['"]([^]+?)['"]/g
+export const KEY_REG = /(?:[\s{\.]t)\(['"]([^]+?)['"]/g
 
 export const isReactProject = (): boolean => {
   const mainProject = vscode.workspace.workspaceFolders[0]

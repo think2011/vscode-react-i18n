@@ -4,8 +4,9 @@ import { KEY_REG } from './'
 
 export class KeyDetector {
   static getKeyByContent(text: string) {
-    const keys = (text.match(KEY_REG) || []).map(key =>
-      key.replace(KEY_REG, '$1')
+    const prefix = this.getKeyPrefixByText(text)
+    const keys = (text.match(KEY_REG) || []).map(
+      key => `${prefix}.${key.replace(KEY_REG, '$1')}`
     )
 
     return [...new Set(keys)]
@@ -18,13 +19,27 @@ export class KeyDetector {
 
   static getKey(document: vscode.TextDocument, position: vscode.Position) {
     const keyRange = document.getWordRangeAtPosition(position, KEY_REG)
-
-    return keyRange
+    const key = keyRange
       ? document.getText(keyRange).replace(KEY_REG, '$1')
       : undefined
+
+    if (!key) {
+      return
+    }
+
+    return `${this.getKeyPrefixByKey(key) ||
+      this.getKeyPrefixByText(document.getText())}.${key}`
   }
 
-  static getKeyPrefix(text): string {
-    return
+  static getKeyPrefixByText(text: string): string {
+    const NS_REG = /(?:useTranslation|withTranslation)\(\[?['"](.*?)['"]/g
+    const nsKey = (text.match(NS_REG) || [])[0] || ''
+
+    return nsKey.replace(NS_REG, '$1')
+  }
+
+  static getKeyPrefixByKey(key: string): string {
+    const [prefix, resetKey] = key.split(':')
+    return resetKey ? prefix : undefined
   }
 }

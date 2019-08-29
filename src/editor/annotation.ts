@@ -1,5 +1,6 @@
 import { Annotation } from '../core/editor'
 import { KEY_REG } from '../utils'
+import { KeyDetector } from '../utils'
 
 class AnnotationProvider extends Annotation {
   get KEY_REG() {
@@ -7,8 +8,10 @@ class AnnotationProvider extends Annotation {
   }
 
   transformKey(text, key) {
-    // TODO: 转换为对应的key
-    return key
+    const prefix =
+      KeyDetector.getKeyPrefixByKey(key) || KeyDetector.getKeyPrefixByText(text)
+
+    return `${prefix}.${key}`
   }
 }
 

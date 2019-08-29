@@ -159,7 +159,8 @@
             {{working ? '翻译中' : `批量根据${sourceLocale}翻译` }}
           </button>
         </h2>
-        <small>当前文件共有{{ keyTotal }}条文案</small>
+        <small v-if="initd">当前文件共有{{ keyTotal }}条文案</small>
+        <small v-else>正在分析..</small>
       </div>
 
       <ul class="i18n-table">
@@ -205,6 +206,7 @@
         el: '#app',
         data() {
           return {
+            initd: false,
             shortFileName: '',
             allTrans: {},
             loadingMap: {},
@@ -223,6 +225,8 @@
         },
         created() {
           window.addEventListener('message', ({ data: eventData }) => {
+            this.initd = true
+
             const { data, type } = eventData
             switch (type) {
               case EVENT_TYPE.ALL_TRANS:
