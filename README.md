@@ -1,5 +1,5 @@
 <p align="center">
-<img src="./static/logo.png" alt="logo" width="100"/>
+<img src="https://raw.githubusercontent.com/think2011/vscode-react-i18n/master/static/logo.png" alt="logo" width="100"/>
 </p>
 <h1 align="center">vscode-react-i18n</h1>
 
