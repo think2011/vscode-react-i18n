@@ -2,7 +2,7 @@
   "name": "react-i18n",
   "displayName": "react i18n",
   "description": "🔖 这个插件能够帮到你方便浏览和编写 react i18n",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "publisher": "think2011",
   "engines": {
     "vscode": "^1.37.0"
