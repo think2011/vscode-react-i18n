@@ -3,16 +3,13 @@ import * as vscode from 'vscode'
 import { KeyDetector } from '../Utils/index'
 
 class ExtractProvider extends Extract {
+  get activeText() {
+    const { document } = vscode.window.activeTextEditor
+    return document.getText()
+  }
+
   keyTransform(key): string {
-    const nsKeyByKey = KeyDetector.getKeyPrefixByKey(key)
-    const [, ...restKey] = key.split(/[.:]/)
-
-    if (nsKeyByKey) {
-      return `${nsKeyByKey}.${restKey.join('.')}`
-    }
-
-    const nsKey = this.getNSkey()
-    return nsKey ? `${nsKey}.${restKey.length ? restKey.join('.') : key}` : key
+    return KeyDetector.normalizeKey(key, this.activeText)
   }
 
   defaultKeyTransform(defaultKey): string {
@@ -23,30 +20,30 @@ class ExtractProvider extends Extract {
     }
 
     const nsKey = this.getNSkey()
-    return nsKey ? `${nsKey}:${resetKey.join('.')}` : `${nsKey}:${defaultKey}`
+    return nsKey ? `${nsKey}.${resetKey.join('.')}` : defaultKey
   }
 
   getNSkey() {
-    const { document } = vscode.window.activeTextEditor
-    const text = document.getText()
-    return KeyDetector.getKeyPrefixByText(text)
+    return KeyDetector.getNsByText(this.activeText)
   }
 
   keyReplace(template) {
     return key => {
       const nsKey = this.getNSkey()
       const [mainKey, ...restKey] = key.split('.')
-      let displayKey = null
+      let shownKey = null
+
+      if (!restKey.length) {
+        return template.replace(/{key}/g, key)
+      }
 
       if (nsKey === mainKey) {
-        displayKey = restKey.join('.')
+        shownKey = restKey.join('.')
       }
-      displayKey =
-        nsKey === mainKey
-          ? restKey.join('.')
-          : `${mainKey}:${restKey.join('.')}`
+      shownKey =
+        nsKey === mainKey ? shownKey : `${mainKey}:${restKey.join('.')}`
 
-      return template.replace(/{key}/g, displayKey)
+      return template.replace(/{key}/g, shownKey)
     }
   }
 

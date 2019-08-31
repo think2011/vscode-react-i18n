@@ -4,9 +4,8 @@ import { KEY_REG } from './'
 
 export class KeyDetector {
   static getKeyByContent(text: string) {
-    const prefix = this.getKeyPrefixByText(text)
-    const keys = (text.match(KEY_REG) || []).map(
-      key => `${prefix}.${key.replace(KEY_REG, '$1')}`
+    const keys = (text.match(KEY_REG) || []).map(key =>
+      this.normalizeKey(key.replace(KEY_REG, '$1'), text)
     )
 
     return [...new Set(keys)]
@@ -27,19 +26,31 @@ export class KeyDetector {
       return
     }
 
-    return `${this.getKeyPrefixByKey(key) ||
-      this.getKeyPrefixByText(document.getText())}.${key}`
+    return this.normalizeKey(key, document.getText())
   }
 
-  static getKeyPrefixByText(text: string): string {
+  static getNsByText(text: string): string {
     const NS_REG = /(?:useTranslation|withTranslation)\(\[?['"](.*?)['"]/g
     const nsKey = (text.match(NS_REG) || [])[0] || ''
 
     return nsKey.replace(NS_REG, '$1')
   }
 
-  static getKeyPrefixByKey(key: string): string {
+  static getNsByKey(key: string): string {
     const [prefix, resetKey] = key.split(':')
     return resetKey ? prefix : undefined
+  }
+
+  static normalizeKey(key: string, text?: string) {
+    if (this.getNsByKey(key)) {
+      return key.replace(':', '.')
+    }
+
+    const nsKey = this.getNsByText(text)
+    if (!nsKey) {
+      return key
+    }
+
+    return `${nsKey}.${key}`
   }
 }

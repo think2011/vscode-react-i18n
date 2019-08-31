@@ -8,10 +8,7 @@ class AnnotationProvider extends Annotation {
   }
 
   transformKey(text, key) {
-    const prefix =
-      KeyDetector.getKeyPrefixByKey(key) || KeyDetector.getKeyPrefixByText(text)
-
-    return `${prefix}.${key}`
+    return KeyDetector.normalizeKey(key, text)
   }
 }
 

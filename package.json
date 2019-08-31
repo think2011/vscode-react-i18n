@@ -113,6 +113,7 @@
     "@types/mocha": "^5.2.6",
     "@types/node": "^10.12.21",
     "@types/vscode": "^1.37.0",
+    "@types/yaml": "^1.0.2",
     "glob": "^7.1.4",
     "mocha": "^6.1.4",
     "tslint": "^5.12.1",
@@ -123,6 +124,7 @@
   "dependencies": {
     "fast-glob": "^2.2.6",
     "lodash": "^4.17.15",
-    "translation.js": "^0.7.5"
+    "translation.js": "^0.7.5",
+    "yaml": "^1.6.0"
   }
 }
