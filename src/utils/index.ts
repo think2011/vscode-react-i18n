@@ -22,6 +22,6 @@ export const isReactProject = (): boolean => {
       }
     )
   } catch (err) {
-    Log.error(err)
+    Log.error(err, false)
   }
 }
