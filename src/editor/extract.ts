@@ -1,6 +1,6 @@
 import { Extract } from '../core/editor'
 import * as vscode from 'vscode'
-import { KeyDetector } from '../Utils/index'
+import { KeyDetector } from '../utils'
 
 class ExtractProvider extends Extract {
   get activeText() {

@@ -8,7 +8,7 @@ Config.extName = 'react-i18n'
 import Log from './core/Log'
 import * as coreCommandsModules from './core/commands'
 
-import { isReactProject } from './Utils'
+import { isReactProject } from './utils'
 import * as editorModules from './editor'
 
 type ModuleType = (
